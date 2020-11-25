@@ -50,7 +50,12 @@ class PhoneNumber(phonenumbers.PhoneNumber):
         """
         checks whether the number supplied is actually valid
         """
-        return phonenumbers.is_valid_number(self)
+        validation_function = (
+            phonenumbers.is_possible_number 
+            if getattr(settings, "PHONENUMBER_POSSIBLE_PHONE_NUMBER_AS_VALID", False)
+            else phonenumbers.is_valid_number
+        )
+        return validation_function(self)
 
     def format_as(self, format):
         return phonenumbers.format_number(self, format)
